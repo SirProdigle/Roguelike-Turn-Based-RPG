@@ -3,7 +3,19 @@ using System.Collections.Generic;
 using System;
 
 public class Equipment {
-	public Player Owner{ get; set;}
+
+	public Equipment(Player p){
+		Owner = p;
+		EquipmentList = new Dictionary<EquipItem.EquipSlot, EquipItem> ();
+	}
+	public Equipment(){
+		EquipmentList = new Dictionary<EquipItem.EquipSlot, EquipItem> ();
+	}
+
+
+
+	Player Owner{ get; set;}
+
 	public Dictionary<EquipItem.EquipSlot, EquipItem> EquipmentList{ get; set;}
 	public Weapon EquippedWeapon{ get;  protected set; }
 

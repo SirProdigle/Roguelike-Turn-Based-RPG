@@ -13,8 +13,4 @@ public interface ITargetable{
 	void BuffStat (Character.AttributeType attribute,int amount);
 	List<TimedEffect> TimedEffects {get;}
 }
-
-public interface ITurnActable{
-	void TakeTurn();
-}
 	

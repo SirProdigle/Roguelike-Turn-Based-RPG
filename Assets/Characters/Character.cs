@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System;
 
 
-//TODO implement a timer system. a class called TimedEffect(event, turnsleft), list in player of TimedEffect
-// every turn, run through each effect, turnsleft --. on 0 do EndEffect event.
-
+/*TODO implement a timer system. a class called TimedEffect(event, turnsleft), 
+ * list in player of TimedEffect
+ *every turn, run through each effect, turnsleft --. on 0 do EndEffect event.
+ */
 public abstract class Character : MonoBehaviour, ITargetable {
 
 	public enum AttributeType{
@@ -24,17 +25,29 @@ public abstract class Character : MonoBehaviour, ITargetable {
 	public List<TimedEffect> TimedEffects{get;set;}
 
 	//Attributes
-	//+ x weapon damage per point
+	//+ x% of weapon damage per point to attack
 	public int Strength{ get; protected set;}
 	// + x health per point
 	public int Constitution{ get; protected set;}
-	// + x*10 to crit rate per point (base 10%)
+	// + x* to crit rate per point (base 10%)
 	public int Agility{ get; protected set;}
 	// + x to mana, +x% to spell amplification per point
 	public int Intelligence{ get; protected set;}
 
 
-	void CalulcateHealth(int previousConstitution, int newConstituion){
+	//Constants
+
+	//% increase damage for spell per intelligence point
+	const float amplifier_Spell = 10;
+	//% chance for crit per agility point
+	const float amplifier_Crit = 10;
+	//Added damage% of weapon damage per strength point
+	const float amplifier_Damage = 30;
+
+
+	//ChangeSTAT should be used only internally as part of the public function BuffStat
+
+	void ChangeConstitution(int previousConstitution, int newConstituion){
 		Constitution = newConstituion;
 		int dif = newConstituion - previousConstitution;
 		Health += dif * 1;// * SOME MODIFIER
@@ -43,23 +56,17 @@ public abstract class Character : MonoBehaviour, ITargetable {
 
 	}
 
-	void CalculateMana(int previousIntelligence, int newIntelligence){
+	void ChangeIntelligence(int previousIntelligence, int newIntelligence){
 		Intelligence = newIntelligence;
 		int dif = newIntelligence - previousIntelligence;
 		Mana += dif * 1;// * SOME MODIFIER
 		MaxMana += dif * 1;
 		//throw new NotImplementedException ("NEEDS REAL TESTING");
 	}
+		
 
 
-	public virtual void TakeTurn(){
-		TickTimedEffects ();
-		throw new NotImplementedException ("SHOULD HAVE A SUBCLASS IMPLEMENTATION");
-		//PlayerPick ();
-		//DoAction ();
-		//EndTurn ();
-		//TODO may want to offload the turn logic into a seperate class
-	}
+
 
 	public void TickTimedEffects(){
 		foreach(TimedEffect t in TimedEffects){
@@ -71,6 +78,8 @@ public abstract class Character : MonoBehaviour, ITargetable {
 		}
 	}
 
+
+	public abstract void Attack (ITargetable e);
 
 	public virtual void TakeDamage(int damage){
 		Health -= damage;
@@ -101,7 +110,7 @@ public abstract class Character : MonoBehaviour, ITargetable {
 			}
 		case AttributeType.Constitution: {
 				//Re-Calculate Health
-				CalulcateHealth (Constitution, Constitution + amount);
+				ChangeConstitution (Constitution, Constitution + amount);
 				break;
 			}
 		case AttributeType.Agility: {
@@ -110,7 +119,7 @@ public abstract class Character : MonoBehaviour, ITargetable {
 			}
 		case AttributeType.Intelligence: {
 				//Re-Calculate Mana
-				CalculateMana (Intelligence, Intelligence + amount);
+				ChangeIntelligence (Intelligence, Intelligence + amount);
 				break;
 			}
 		}

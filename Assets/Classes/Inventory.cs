@@ -8,9 +8,13 @@ public class Inventory {
 
 	public void AddItem(Item i){
 		Items.Add (i);
-		//throw new NotImplementedException ();
 	}
 	public void RemoveItem(Item i){
-		throw new NotImplementedException();
+		Items.Remove (i);
 	}
+
+	public Inventory(){
+		Items = new List<Item> ();
+	}
+
 }

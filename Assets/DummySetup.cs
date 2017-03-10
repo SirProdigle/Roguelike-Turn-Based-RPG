@@ -10,9 +10,8 @@ public class DummySetup : MonoBehaviour {
 		me.Bag = new Inventory ();
 		me.Bag.Items = new List<Item> ();
 		me.Equipment = new Equipment ();
-		me.Equipment.Owner = me;
 		me.Equipment.EquipmentList = new Dictionary<EquipItem.EquipSlot, EquipItem> ();
-		Enemy enemy = new Enemy ();
+		Enemy enemy = new Enemy (10,0,0,0,0,0,5,5);
 
 
 		Spell Fireball1 = new Spell ("Fireball", 10);

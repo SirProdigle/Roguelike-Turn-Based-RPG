@@ -14,7 +14,6 @@ public class Item{
 		Icon = i;
 	}
 }
-
 public class EquipItem : Item{
 
 
@@ -39,50 +38,62 @@ public class EquipItem : Item{
 	public  EquipEventHandler OnUnequip;
 
 	public void EquipEffect(Player c){
-		OnEquip(c, this);
+		if(OnEquip != null)
+			OnEquip(c, this);
 		throw new NotImplementedException();
 	}
 	public void UnEquipEffect(Player c){
-		OnUnequip(c, this);
+		if(OnUnequip != null)
+			OnUnequip(c, this);
 		throw new NotImplementedException();
 	}
 }
-
+	
 public class Weapon: EquipItem{
 	public TimedEffect TimedWeaponEffect { get; set;}
 	public Weapon(string n, string d, Sprite i, int mindamage, int maxdamage) : base(n,d,i,EquipSlot.Weapon){
 		MinDamage = mindamage;
 		MaxDamage = maxdamage;
+
 	}
 
 	public int MinDamage{ get; set;}
 	public int MaxDamage{ get; set;}
 
-	public delegate void AttackEffectEventHandler(Weapon w, Enemy e);
+	public delegate void AttackEffectEventHandler(Weapon w, ITargetable e);
 	public event AttackEffectEventHandler OnAttackEffect;
 
-	public void ApplyAttackEffect(Enemy e){
-		OnAttackEffect (this,e);
+	public void ApplyAttackEffect(ITargetable e){
+		if(OnAttackEffect != null)
+			OnAttackEffect (this,e);
 		if (TimedWeaponEffect != null) {
 			e.TimedEffects.Add (TimedWeaponEffect);
 		}
 		
 	}
+
+	public int GetAttackDamage(){
+		return UnityEngine.Random.Range (MinDamage, MaxDamage++);
+	}
 }
+
 
 public class ConsumableItem : Item{
 	public TimedEffect TimedConsumableEffect { get; set;}
 	public delegate void ConsumeEventHandler(Character c, ConsumableItem i);
-	public  ConsumeEventHandler OnConsume;
+	public event ConsumeEventHandler OnConsume;
 
-	public ConsumableItem(string n, string d, Sprite i) : base(n,d,i){}
+	public ConsumableItem(string n, string d, Sprite i) : base(n,d,i){
+		
+	}
 
 	public void Consume(Player c){
 		if(TimedConsumableEffect != null){
 			c.TimedEffects.Add (TimedConsumableEffect);		
 		}
-		//remove from players inventory
-		OnConsume (c, this);
+		if (OnConsume != null) {
+			OnConsume (c, this);
+		}
 		throw new NotImplementedException("Remove from players inventory");
 	}
 }
