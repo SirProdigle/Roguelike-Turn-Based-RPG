@@ -7,7 +7,7 @@ using System;
  * list in player of TimedEffect
  *every turn, run through each effect, turnsleft --. on 0 do EndEffect event.
  */
-public abstract class Character : MonoBehaviour, ITargetable {
+public abstract class Character : ITargetable {
 
 	public enum AttributeType{
 		Strength,
