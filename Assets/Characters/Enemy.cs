@@ -40,9 +40,12 @@ public class Enemy : Character {
 	override public void Attack(ITargetable e){
 		int damageToApply = UnityEngine.Random.Range (minBaseDamage + Strength, maxBaseDamage + Strength++);
 		e.TakeDamage (damageToApply);
+		if(OnAttack != null){
+			OnAttack (e);
+		}
 	}
 
-	void ApplyDmaageEffect(ITargetable e){
+	void ApplyDamageEffect(ITargetable e){
 		if(TimedDamageEffect != null){
 			e.TimedEffects.Add (TimedDamageEffect);
 		}
